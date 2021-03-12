@@ -1,32 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
-router.get('/' , (req,res) =>{
-    console.log("hello world")
-    res.end()
-
-});
-router.get('/:id' , (req,res) =>{
-    console.log("hello one")
-    res.end()
-})
-router.post('/' , (req,res) =>{
-    console.log("created")
-    res.end()
-})
-router.put('/:id' , (req,res) =>{
-    console.log("updated")
-    res.end()
-})
-router.delete('/:id' , (req,res) =>{
-    console.log("deleted")
-    res.end()
-})
-
-
-
-
-
-
+const {getBootcamps,getBootcamp,createBootcamps,updateBootcamps,deleteBootcamps}=require('../controller/bootcamps')
+//one way of getting thing from controller nothing way writting code in one line
+router.route('/').get(getBootcamps).post(createBootcamps)
+//way of writing in an otherway
+router.route('/:id')
+.get(getBootcamp)
+.put(updateBootcamps)
+.delete(deleteBootcamps)
 
 module.exports = router;
