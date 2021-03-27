@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const slugify= require ('slugify')
+const geocoder= require ('../util/geocoder')
+
 //new schema
 const BootcampSchema = new mongoose.Schema({
     name:{
@@ -28,6 +31,11 @@ const BootcampSchema = new mongoose.Schema({
         type: Number,
         maxlength:[20,'Please enter valid phone no..']
     },
+    address:{
+      type:String,
+      required:true,
+      maxlength: [200,'address length must not more than 200']
+    },
     location: {
         type: {
           type: String, // Don't do `{ location: { type: String } }`
@@ -39,7 +47,7 @@ const BootcampSchema = new mongoose.Schema({
             // required: true,
             index: '2dsphere'
           },
-          formattedAdress: String,
+          formattedAddress: String,
           street: String,
           city : String,
           state: String,
@@ -89,4 +97,24 @@ const BootcampSchema = new mongoose.Schema({
         default: Date.now
       }
 });
+BootcampSchema.pre('save',function(next){
+  this.slug=slugify(this.name,{lower:true})
+  next()
+});
+BootcampSchema.pre('save',async function(next){
+  const loc= await geocoder.geocode(this.address)
+  this.location={
+    type:'point',
+    coordinates: [loc[0].longitude,loc[0].latitude],
+    formattedAddress:loc[0].formattedAddress,
+    street:loc[0].streetName,
+    city:loc[0].city,
+    state:loc[0].stateCode,
+    Zipcode:loc[0].zipcode,
+    country:loc[0].countryCode
+  }
+  //dont save address after getting formatted in db
+  this.address=undefined
+  next()
+})
 module.exports= mongoose.model('Bootcamp', BootcampSchema)
