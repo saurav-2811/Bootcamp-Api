@@ -28,7 +28,7 @@ const BootcampSchema = new mongoose.Schema({
     ]
     },
     phone:{
-        type: Number,
+        type: String,
         maxlength:[20,'Please enter valid phone no..']
     },
     address:{

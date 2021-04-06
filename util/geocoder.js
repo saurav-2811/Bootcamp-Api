@@ -8,5 +8,4 @@ const options={
     formatter:null
 };
 const geocoder =NodeGeocoder(options);
-console.log(options)
 module.exports=geocoder
