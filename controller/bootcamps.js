@@ -63,22 +63,21 @@ exports.deleteBootcamps = asyncHandler(async(req,res,next) =>{
 //@route        get on /api/v1/bootcamps/radius/:zipcode/:distance
 //access        private
 exports.GetWithInRadius = asyncHandler(async(req,res,next) =>{
-   const {zipcode,distance}=req.params;
+    const {zipcode,distance}=req.params;
    //get latitude and logintude from geocoder
    const loc =await geocoder.geocode(zipcode);
    const lat=loc[0].latitude;
    const lng=loc[0].longitude;
    //calc GetWithInRadius
    const radius = distance / 3963;
-   const bootcampsg=await Bootcamp.find({
-    location: {
-        $geoWithin: { $centerSphere: [ [ lng, lat ], radius ] }
-    }
+
+   const bootcamps = await Bootcamp.find({
+     location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
    });
-res.status(200).json({
-    success: true,
-    count:bootcampsg.length,
-    data:bootcampsg
-})
-console.log(lat,lng,zipcode,radius,distance,loc)
+ 
+   res.status(200).json({
+     success: true,
+     count: bootcamps.length,
+     data: bootcamps
+   });
 });
