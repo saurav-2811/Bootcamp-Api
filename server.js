@@ -18,6 +18,7 @@ app.use (logger('dev'))
 //database connected
 connectDb();
 app.use ('/api/v1/bootcamps' ,bootcamps)
+app.use ('/api/v1/courses' ,courses)
 //middleware error
 app.use(errorHandler)
 //port on which our server will rull
