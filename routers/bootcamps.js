@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+courseRouter=require('./courses')
 const {getBootcamps,getBootcamp,createBootcamps,updateBootcamps,deleteBootcamps,GetWithInRadius}=require('../controller/bootcamps')
+//used course router
+router.use('/:bootcampId/courses',courseRouter)
 //one way of getting thing from controller nothing way writting code in one line
 router.route('/radius/:zipcode/:distance').get(GetWithInRadius)
 router.route('/').get(getBootcamps).post(createBootcamps)

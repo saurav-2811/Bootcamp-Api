@@ -2,6 +2,7 @@ const asyncHandler= require('../middleware/async')
 const ErrorResponse= require('../util/errorResponse')
 const geocoder = require('../util/geocoder');
 const Bootcamp= require('../models/Bootcamp');
+
 //@desc         will show all the bootcamps
 //@route        GET on /api/v1/bootcamps/
 //access        public
