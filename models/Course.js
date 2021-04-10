@@ -4,7 +4,8 @@ const slugify=require ('slugify')
 const CourseSchema=new mongoose.Schema({
     title:{
         type: String,
-        required:true,
+        trime:true,
+        required:[true,"Please add title"],
         maxlength:[100,"title must not be more than 100"]
     },
     description:{
@@ -21,7 +22,7 @@ const CourseSchema=new mongoose.Schema({
         required:true, 
     },
     minimumSkill:{
-        type:[String],
+        type:String,
         enum:[
             "beginner",
             "intermediate",
@@ -37,7 +38,7 @@ const CourseSchema=new mongoose.Schema({
     },
     bootcamp:{
         type:mongoose.Schema.ObjectId,
-        ref:Bootcamp,
+        ref:'Bootcamp',
         required:true
     }
 

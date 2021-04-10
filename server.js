@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 //connecting routes
 const bootcamps = require('./routers/bootcamps')
+const courses= require('./routers/courses')
 
 //connect env file by giving path
 dotenv.config({path:'./config/config.env'})
