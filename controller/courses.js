@@ -29,7 +29,10 @@ exports.getCourses=asyncHandler(async(req,res,next) =>{
 //@route        get on /api/v1/courses/:id
 //access        private
 exports.getACourses=asyncHandler(async(req,res,next) =>{
-    let courses= await Course.findById(req.params.id)
+    let courses= await Course.findById(req.params.id).populate({
+        path:'bootcamp',
+        select:'name description'
+    })
     if(!courses){
         return next(
             new ErrorResponse(`no courses with the id of ${req.params.id}`,
@@ -74,7 +77,14 @@ exports.createCourses=asyncHandler(async(req,res,next) =>{
 // //@route        delete on /api/v1/courses/:id
 // //access        private
 exports.deleteCourses=asyncHandler(async(req,res,next) =>{
-    let courses= await Course.findByIdAndDelete(req.params.id,req.body)
+    const course= await Course.findById(req.params.id)
+    if(!course){
+        return next(
+            new ErrorResponse(`no bootcamp with the id of ${req.params.bootcampId}`,
+            404)
+        )
+    }
+    await Course.remove()
     res.status(200).json({
         success: true,
  
