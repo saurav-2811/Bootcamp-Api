@@ -33,7 +33,7 @@ exports.getBootcamps =asyncHandler(async(req,res,next) =>{
     const endIndex=page*limit;
     const total=await Bootcamp.countDocuments();
     query=query.skip(startIndex).limit(limit)
-    let bootcamps=await query;
+    let bootcamps=await query.populate('courses')
     //pagination result
     const pagination={};
     if(endIndex<total){

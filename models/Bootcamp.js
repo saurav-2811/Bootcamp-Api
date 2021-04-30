@@ -96,11 +96,22 @@ const BootcampSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       }
-});
+},
+{
+  toJSON:{
+    virtuals:true
+  },
+  toObject:{
+    virtuals:true
+  }
+}
+);
+//to slugy name before save
 BootcampSchema.pre('save',function(next){
   this.slug=slugify(this.name,{lower:true})
   next()
 });
+//use geocoder to modify address
 BootcampSchema.pre('save',async function(next){
   const loc= await geocoder.geocode(this.address)
   this.location={
@@ -116,5 +127,18 @@ BootcampSchema.pre('save',async function(next){
   //dont save address after getting formatted in db
   this.address=undefined
   next()
+});
+//Reverse populate with virtuals
+BootcampSchema.virtual('courses',{
+  //ref:model name which is to reffer
+  ref:'Course',
+  //localField which is also present in course model in this case BootcampId
+  localField:'_id',
+  //forgienField which is present as field in course model
+  foreignField:'bootcamp',
+  //want resul in  array
+  justOne: false
+
 })
+
 module.exports= mongoose.model('Bootcamp', BootcampSchema)
