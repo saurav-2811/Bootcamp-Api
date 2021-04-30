@@ -20,7 +20,7 @@ mongoose.connect(process.env.DB_ENV,{
    const importData=async ()=>{
        try{
        await Bootcamp.create(bootcamps);
-       await Course.create(courses);
+    //    await Course.create(courses);
        console.log("data imported".green.inverse)
        process.exit()
        }
