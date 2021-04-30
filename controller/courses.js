@@ -44,7 +44,7 @@ exports.getACourses=asyncHandler(async(req,res,next) =>{
 // //@route        put on /api/v1/courses/:id
 // //access        private
 exports.updateCourses=asyncHandler(async(req,res,next) =>{
-    let courses= await Bootcamp.findOneAndUpdate(req.params.id,req.body,{
+    let courses= await Course.findOneAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators:true
     })
