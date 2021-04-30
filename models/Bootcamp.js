@@ -106,6 +106,11 @@ const BootcampSchema = new mongoose.Schema({
   }
 }
 );
+//delete all the related courses if bootcamp of those courses is deleteed
+BootcampSchema.pre('remove', async function(next){
+  await this.model('Course').deleteMany({bootcamp:this._id})
+  next();
+})
 //to slugy name before save
 BootcampSchema.pre('save',function(next){
   this.slug=slugify(this.name,{lower:true})

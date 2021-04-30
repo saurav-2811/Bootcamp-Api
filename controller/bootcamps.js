@@ -97,9 +97,14 @@ exports.updateBootcamps =asyncHandler(async(req,res,next) =>{
 //@route        delete on /api/v1/bootcamps/:id
 //access        private
 exports.deleteBootcamps = asyncHandler(async(req,res,next) =>{
-    let bootcampDelete= await Bootcamp.findByIdAndDelete(req.params.id , req.body)
+    const bootcampDelete= await Bootcamp.findById(req.params.id)
+
+    bootcampDelete.remove();
+    
     console.log("deleted")
-    res.redirect('/api/v1/bootcamps')
+    res.status(200).json({
+        success:true
+    })
 });
 //@desc         will get bootcamp within radius
 //@route        get on /api/v1/bootcamps/radius/:zipcode/:distance
