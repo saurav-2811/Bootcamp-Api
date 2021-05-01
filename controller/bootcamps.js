@@ -61,15 +61,15 @@ exports.getBootcamps =asyncHandler(async(req,res,next) =>{
 //@route        GET on /api/v1/bootcamps/:id
 //access        public
 exports.getBootcamp =asyncHandler(async(req,res,next) =>{
-        let bootcamp=await Bootcamp.findById(req.params.id)
+    let bootcamp=await Bootcamp.findById(req.params.id)
+    if(!bootcamp){
+            return  next(  new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,
+            404))
+    }
         res.status(200).json({
             success: true,
             data: bootcamp
         })
-        if(!bootcamp){
-                return  next(  new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,
-                404))
-        }
 
 });
 //@desc         create bootcamps
@@ -100,10 +100,10 @@ exports.updateBootcamps =asyncHandler(async(req,res,next) =>{
 //access        private
 exports.deleteBootcamps = asyncHandler(async(req,res,next) =>{
     const bootcampDelete= await Bootcamp.findById(req.params.id)
-
+    if(!bootcampDelete){
+        return next(  new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,404))
+    }
     bootcampDelete.remove();
-    
-    console.log("deleted")
     res.status(200).json({
         success:true
     })
@@ -131,9 +131,9 @@ exports.GetWithInRadius = asyncHandler(async(req,res,next) =>{
    });
 });
 
-// //@desc         will delete the selected courses useing id
-// //@route        put on api/v1/bootcamps/:id/photo
-// //access        private
+//@desc        upload photo
+//@route        put on api/v1/bootcamps/:id/photo
+//access        private
 exports.bootcampPhotoUpload=asyncHandler(async(req,res,next) =>{
     const bootcamp= await Bootcamp.findById(req.params.id)
     if(!bootcamp){
