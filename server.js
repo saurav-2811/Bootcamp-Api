@@ -1,6 +1,8 @@
 const express= require ('express')
+const path= require ('path')
 const dotenv= require('dotenv')
 const colors= require('colors')
+const fileupload=require ('express-fileupload')
 const logger = require ('morgan')
 const connectDb = require ('./config/db')
 const errorHandler=require('./middleware/error')
@@ -13,11 +15,15 @@ const courses= require('./routers/courses')
 
 //connect env file by giving path
 dotenv.config({path:'./config/config.env'})
+//database connected
+connectDb();
 if(process.env.NODE_ENV==='development'){
 app.use (logger('dev'))
 }
-//database connected
-connectDb();
+//file uploading
+app.use(fileupload())
+//set static folder
+app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
 app.use ('/api/v1/courses' ,courses)
 //middleware error

@@ -1,4 +1,5 @@
 const asyncHandler= require('../middleware/async')
+const path=require('path')
 const ErrorResponse= require('../util/errorResponse')
 const geocoder = require('../util/geocoder');
 const Bootcamp= require('../models/Bootcamp');
@@ -66,7 +67,8 @@ exports.getBootcamp =asyncHandler(async(req,res,next) =>{
             data: bootcamp
         })
         if(!bootcamp){
-                return  next(err)
+                return  next(  new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,
+                404))
         }
 
 });
@@ -128,3 +130,52 @@ exports.GetWithInRadius = asyncHandler(async(req,res,next) =>{
      data: bootcamps
    });
 });
+
+// //@desc         will delete the selected courses useing id
+// //@route        put on api/v1/bootcamps/:id/photo
+// //access        private
+exports.bootcampPhotoUpload=asyncHandler(async(req,res,next) =>{
+    const bootcamp= await Bootcamp.findById(req.params.id)
+    if(!bootcamp){
+        return next(
+            new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,
+            404)
+        )
+    }
+    if(!req.files){
+        return next(
+            new ErrorResponse(`Please upload a photo`,
+            404)
+        )
+    }
+    const file=req.files.file;
+    //make sure the mage is photo
+    if(!file.mimetype.startsWith('image')){
+        return next(
+            new ErrorResponse(`Please upload an image file`,
+            404)
+        )     
+    }
+    //check file size
+    if(file.size>process.env.MAX_FILE_UPLOAD){
+        return next(
+            new ErrorResponse(`image size should be less than 1000000`,
+            404))
+    }
+    //creat costum file name
+    file.name=`photo_${bootcamp._id}${path.parse(file.name).ext}`
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err)=>{
+        if(err){
+            console.log(err)
+            return next(
+                new ErrorResponse(`problem in uploading`,
+                500))
+        }
+        await Bootcamp.findByIdAndUpdate(req.params.id,{photo:file.name})
+        res.status(200).json({
+            success: true,
+            data: file.name
+        })
+    })
+
+})
