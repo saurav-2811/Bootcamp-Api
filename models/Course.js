@@ -59,7 +59,6 @@ CourseSchema.statics.getAverageCost=async function(bootcampId){
             averageCost:{$avg:'$tuition'}
         }
     }]);
-
     try{
         if(obj[0]){
         await this.model('Bootcamp').findByIdAndUpdate(bootcampId,{
