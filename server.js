@@ -12,6 +12,7 @@ app.use(express.json());
 //connecting routes
 const bootcamps = require('./routers/bootcamps')
 const courses= require('./routers/courses')
+const auth= require ('./routers/auth')
 
 //connect env file by giving path
 dotenv.config({path:'./config/config.env'})
@@ -26,6 +27,7 @@ app.use(fileupload())
 app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
 app.use ('/api/v1/courses' ,courses)
+app.use ('/api/v1/auth' ,auth)
 //middleware error
 app.use(errorHandler)
 //port on which our server will rull
