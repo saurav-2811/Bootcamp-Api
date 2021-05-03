@@ -40,4 +40,8 @@ const UserSchema= new mongoose.Schema({
        id:this._id
       }, process.env.Secret, { expiresIn: process.env.expire})
     }
+
+    UserSchema.methods.matchpassword=async function(enteredpassword){
+       return await bcrypt.compare(enteredpassword,this.password)
+    }
 module.exports= mongoose.model('User',UserSchema)
