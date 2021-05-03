@@ -4,11 +4,14 @@ const dotenv= require('dotenv')
 const colors= require('colors')
 const fileupload=require ('express-fileupload')
 const logger = require ('morgan')
+const cookieParser= require ('cookie-parser')
 const connectDb = require ('./config/db')
 const errorHandler=require('./middleware/error')
 const app = express()
 app.use(express.urlencoded({ extended: true }));
+//body parser
 app.use(express.json());
+app.use(cookieParser())
 //connecting routes
 const bootcamps = require('./routers/bootcamps')
 const courses= require('./routers/courses')
