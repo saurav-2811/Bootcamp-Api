@@ -8,7 +8,6 @@ const Bootcamp= require('../models/Bootcamp');
 //@route        GET on /api/v1/bootcamps/
 //access        public
 exports.getBootcamps =asyncHandler(async(req,res,next) =>{
-    debugger;
         res.status(200).json(res.advancedResults)
     });
    
@@ -49,7 +48,11 @@ exports.createBootcamps =asyncHandler(async(req,res,next) =>{
 //@route        put on /api/v1/bootcamps/:id
 //access        private
 exports.updateBootcamps =asyncHandler(async(req,res,next) =>{
-        let bootcampUpdate= await Bootcamp.findByIdAndUpdate(req.params.id , req.body,{ 
+        let bootcampUpdate= await Bootcamp.findById(req.params.id )
+        if(bootcampUpdate.user.toString()!==req.user.id && req.user.role!=='admin'){
+            return next(new ErrorResponse(`${req.user.id} is not authorised to update this bootcamp`,401))
+        }
+        bootcampUpdate=await Bootcamp.findById(req.params.id, req.body,{ 
             new:true,
             runValidators:true
         });
@@ -65,6 +68,9 @@ exports.deleteBootcamps = asyncHandler(async(req,res,next) =>{
     const bootcampDelete= await Bootcamp.findById(req.params.id)
     if(!bootcampDelete){
         return next(  new ErrorResponse(`no bootcamp with the id of ${req.params.id}`,404))
+    }
+    if(bootcampDelete.user.toString()!==req.user.id && req.user.role!=='admin'){
+        return next(new ErrorResponse(`${req.user.id} is not authorised to delete this bootcamp`,401))
     }
     bootcampDelete.remove();
     res.status(200).json({
@@ -105,6 +111,11 @@ exports.bootcampPhotoUpload=asyncHandler(async(req,res,next) =>{
             404)
         )
     }
+    
+    if(bootcamp.user.toString()!==req.user.id && req.user.role!=='admin'){
+        return next(new ErrorResponse(`${req.user.id} is not authorised to upload photo to this bootcamp`,401))
+    }
+
     if(!req.files){
         return next(
             new ErrorResponse(`Please upload a photo`,
