@@ -55,6 +55,22 @@ exports.getMe =asyncHandler(async(req,res,next) =>{
     })
 });
 
+//@desc         forgetpassword
+//@route        get on /api/v1/me
+//access        private
+exports.forgetPassword = asyncHandler(async(req,res,next) =>{
+    const user=await User.findOne({email:req.body.email})
+    if(!user){
+        return next(new ErrorResponse('user not found',404))
+    }
+    const restToken= user.genResetToken();
+    await user.save({validateBeforeSave:false})
+    res.status(200).json({
+        success: true,
+        data: user,
+    })
+});
+
 
 
 //get token from model,create cookie and send response
