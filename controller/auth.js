@@ -2,6 +2,7 @@ const asyncHandler= require('../middleware/async')
 const ErrorResponse= require('../util/errorResponse')
 const User= require('../models/User')
 const sendEmail=require ('../util/sendEmail')
+const crypto=require('crypto')
 
 //@desc         registr user
 //@route        post on /api/v1/auth/register
@@ -55,7 +56,7 @@ exports.getMe =asyncHandler(async(req,res,next) =>{
 });
 
 //@desc         forgetpassword
-//@route        get on /api/v1/me
+//@route        post on /api/v1/auth/forgetpassword
 //access        private
 exports.forgetPassword = asyncHandler(async(req,res,next) =>{
     const user=await User.findOne({email:req.body.email})
@@ -65,7 +66,7 @@ exports.forgetPassword = asyncHandler(async(req,res,next) =>{
     // debugger
     const resetToken= user.genResetToken();
     await user.save({validateBeforeSave:false})
-    const resetUrl=`${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`
+    const resetUrl=`${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`
     const message=`you are having this mail as you or someone has requested to reset password.Please follow the url below to reset :\n\n${resetUrl}`
 
 
@@ -87,6 +88,30 @@ exports.forgetPassword = asyncHandler(async(req,res,next) =>{
         return next(new ErrorResponse(`email could not be sent`,500))
     }
 });
+
+//@desc         reset password
+//@route        post on /api/v1/auth/resetpassword/:resettoken
+//access        private
+exports.resetPassword = asyncHandler(async(req,res,next) =>{
+        const resetPasswordToken= crypto
+        .createHash('sha256')
+        .update(req.params.resettoken)
+        .digest('hex')
+        const user=await User.findOne({resetPasswordToken,resetPasswordExpire:{$gt:Date.now()}})
+        if(!user){
+            return next(new ErrorResponse('invalid token',400))
+        }
+        //set new password
+        user.password=req.body.password
+        user.resetPasswordToken=undefined
+        user.resetPasswordExpire=undefined
+        await user.save({validateBeforeSave:true})
+        res.status(200).json({
+            success: true,
+            data:'password has been reset successfully'
+        })
+});
+
 
 
 
