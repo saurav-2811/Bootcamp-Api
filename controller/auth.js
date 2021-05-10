@@ -113,6 +113,26 @@ exports.resetPassword = asyncHandler(async(req,res,next) =>{
 });
 
 
+//@desc         udate details
+//@route        put on /api/v1/updatedetails
+//access        private
+exports.updateDetails = asyncHandler(async(req,res,next) =>{
+   const filedsToUpdate= {
+       email:req.body.email,
+       name:req.body.name
+   }
+    const user= await User.findByIdAndUpdate(req.user.id,filedsToUpdate,{
+        new:true,
+        runValidators:true
+    })
+    if(!user){
+        return next(new ErrorResponse('user not found',404))
+    }
+    res.status(200).json({
+        success: true,
+        data: user,
+    })
+});
 
 
 //get token from model,create cookie and send response
