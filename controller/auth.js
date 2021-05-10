@@ -135,6 +135,27 @@ exports.updateDetails = asyncHandler(async(req,res,next) =>{
 });
 
 
+//@desc         udate password
+//@route        put on /api/v1/updatepassword
+//access        private
+exports.updatePassword = asyncHandler(async(req,res,next) =>{
+
+     const user= await User.findById(req.user.id).select('+password')
+     if(!user){
+         return next(new ErrorResponse('user not found',404))
+     }
+     if(!(await user.matchpassword(req.body.currentPassword))){
+        return next(new ErrorResponse('Please add valid current Password',400))
+     }
+     user.password=req.body.newPassword
+     await user.save()
+     res.status(200).json({
+         success: true,
+         data: user,
+     })
+ });
+
+
 //get token from model,create cookie and send response
 const sendTokenResponse=(user,statusCode,res)=>{
     //create token
