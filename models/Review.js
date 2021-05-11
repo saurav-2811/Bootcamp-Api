@@ -38,4 +38,52 @@ const ReviewSchema=new mongoose.Schema({
 )
 ReviewSchema.index({bootcamp:1,user:1},{unique:true})
 
+
+//statics method to get avg of course tutions
+ReviewSchema.statics.getAverageRating=async function(bootcampId){
+    const obj=await this.aggregate([{
+        $match:{
+            bootcamp:bootcampId
+        }
+    },
+    {
+        $group:{
+            _id:'$bootcamp',
+            averageRating:{$avg:'$rating'}
+        }
+    }]);
+    try{
+        if(obj[0]){
+        await this.model('Bootcamp').findByIdAndUpdate(bootcampId,{
+            averageRating:obj[0].averageRating
+        },{ 
+            new:true,
+            runValidators:true
+        })}
+        else{
+            await this.model('Bootcamp').findByIdAndUpdate(bootcampId,{
+                averageRating:undefined
+            },{ 
+                new:true,
+                runValidators:true
+            })
+            }
+        }
+    
+    catch(err){
+        console.log(err)
+    }
+};
+
+
+//call getAverageCost after save
+ReviewSchema.post('save' ,function(){
+    this.constructor.getAverageRating(this.bootcamp)
+})
+
+//call getAverageCost before remove
+ReviewSchema.pre('remove' ,function(){
+    this.constructor.getAverageRating(this.bootcamp)
+})
+
 module.exports=mongoose.model("Review",ReviewSchema)
