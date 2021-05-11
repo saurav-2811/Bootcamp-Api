@@ -3,6 +3,8 @@ const path= require ('path')
 const dotenv= require('dotenv')
 const colors= require('colors')
 const mongoSanitize= require('express-mongo-sanitize')
+const helmet=require ('helmet')
+const xss= require('xss-clean')
 const fileupload=require ('express-fileupload')
 const logger = require ('morgan')
 const cookieParser= require ('cookie-parser')
@@ -28,7 +30,12 @@ app.use (logger('dev'))
 }
 //file uploading
 app.use(fileupload())
+//sanitize data
 app.use(mongoSanitize())
+//set security headers
+app.use(helmet())
+//prevent cliet side scripting
+app.use(xss())
 //set static folder
 app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
