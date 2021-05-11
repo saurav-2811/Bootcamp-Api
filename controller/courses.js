@@ -101,9 +101,9 @@ exports.createCourses = asyncHandler(async (req, res, next) => {
     data: course,
   });
 });
-// //@desc         will delete the selected courses useing id
-// //@route        delete on /api/v1/courses/:id
-// //access        private
+//@desc         will delete the selected courses useing id
+//@route        delete on /api/v1/courses/:id
+//access        private
 exports.deleteCourses = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.id);
   if (!course) {
