@@ -10,7 +10,7 @@ const errorHandler=(err,req,res,next)=>{
         error= new ErrorResponse(message,404)
     }
     if(err.code === 11000){
-        const message=`Bootcamp already present in database id:${err.value}`
+        const message=`resources already present in database id:${err.value}`
         error= new ErrorResponse(message,404)
     }
     if(err.name === 'ValidationError'){
