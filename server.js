@@ -2,6 +2,7 @@ const express= require ('express')
 const path= require ('path')
 const dotenv= require('dotenv')
 const colors= require('colors')
+const mongoSanitize= require('express-mongo-sanitize')
 const fileupload=require ('express-fileupload')
 const logger = require ('morgan')
 const cookieParser= require ('cookie-parser')
@@ -27,6 +28,7 @@ app.use (logger('dev'))
 }
 //file uploading
 app.use(fileupload())
+app.use(mongoSanitize())
 //set static folder
 app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
