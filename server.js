@@ -2,6 +2,7 @@ const express= require ('express')
 const path= require ('path')
 const dotenv= require('dotenv')
 const colors= require('colors')
+const cors= require('cors')
 const mongoSanitize= require('express-mongo-sanitize')
 const helmet=require ('helmet')
 const xss= require('xss-clean')
@@ -46,6 +47,8 @@ const limiter=rateLimit({
 app.use(limiter)
 //prevent http params pollutions
 app.use(hpp())
+//enabling cors
+app.use(cors())
 //set static folder
 app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
