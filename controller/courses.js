@@ -5,6 +5,7 @@ const Course = require("../models/Course");
 const Bootcamp = require("../models/Bootcamp");
 //@desc         will get all courses
 //@route        get on /api/v1/courses/
+//@route        get on  /api/v1/bootcamps/:id/courses/
 //access        private
 exports.getCourses = asyncHandler(async (req, res, next) => {
   if (req.params.bootcampId) {

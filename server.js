@@ -17,6 +17,7 @@ const bootcamps = require('./routers/bootcamps')
 const courses= require('./routers/courses')
 const auth= require ('./routers/auth')
 const users= require ('./routers/users')
+const reviews= require ('./routers/reviews')
 //connect env file by giving path
 dotenv.config({path:'./config/config.env'})
 //database connected
@@ -31,7 +32,8 @@ app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
 app.use ('/api/v1/courses' ,courses)
 app.use ('/api/v1/auth' ,auth)
-app.use ('/api/v1/auth' ,users)
+app.use ('/api/v1/users' ,users)
+app.use ('/api/v1/reviews' ,reviews)
 //middleware error
 app.use(errorHandler)
 //port on which our server will rull
