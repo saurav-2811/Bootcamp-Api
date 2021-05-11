@@ -2,13 +2,11 @@
 
 Created the backend for a bootcamp directory website. 
 
-[![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=for-the-badge&logo=appveyor)](https://documenter.getpostman.com/view/14176656/TzRUA6vj)
-
 ## Documentation
 - Use Postman to create documentation
 - Use docgen to create HTML files from Postman
 - Add html files as the / route for the api
-
+[![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=for-the-badge&logo=appveyor)](https://documenter.getpostman.com/view/14176656/TzRUA6vj)
 
 ## functionality
 
