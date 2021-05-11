@@ -5,6 +5,8 @@ const colors= require('colors')
 const mongoSanitize= require('express-mongo-sanitize')
 const helmet=require ('helmet')
 const xss= require('xss-clean')
+const  rateLimit= require ('express-rate-limit')
+const hpp= require ('hpp')
 const fileupload=require ('express-fileupload')
 const logger = require ('morgan')
 const cookieParser= require ('cookie-parser')
@@ -36,6 +38,14 @@ app.use(mongoSanitize())
 app.use(helmet())
 //prevent cliet side scripting
 app.use(xss())
+//limit request acc minutes
+const limiter=rateLimit({
+    windowMs:10*60*1000,
+    max:100
+})
+app.use(limiter)
+//prevent http params pollutions
+app.use(hpp())
 //set static folder
 app.use(express.static(path.join(__dirname,'public')))
 app.use ('/api/v1/bootcamps' ,bootcamps)
