@@ -1,5 +1,5 @@
 const express = require('express');
-const{getReviews}= require('../controller/reviews')
+const{getReviews,getReview,addReview}= require('../controller/reviews')
 const Review=require('../models/Review')
 const advancedResults=require ('../middleware/advancedResults')
 const {protect,authorised}= require('../middleware/auth')
@@ -9,6 +9,8 @@ router.route('/')
     path:'bootcamp',
     select:'name description'
 }),getReviews)
-
+.post(protect,authorised('user','admin'),addReview)
+router.route('/:id')
+.get(getReview)
 
 module.exports=router

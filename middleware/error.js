@@ -6,7 +6,7 @@ const errorHandler=(err,req,res,next)=>{
     let error={...err}
     error.message=err.message
     if(err.name ==='CastError'){
-        const message=`Bootcamp not found in database id:${err.value}`
+        const message=`resourses not found in database id:${err.value}`
         error= new ErrorResponse(message,404)
     }
     if(err.code === 11000){
