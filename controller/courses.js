@@ -111,10 +111,7 @@ exports.deleteCourses = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`no course with the id of ${req.params.id}`, 404)
     );
   }
-  if (
-    course.user.toString() !== req.user.id &&
-    req.user.role !== "admin"
-  ) {
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
     return next(
       new ErrorResponse(
         `${req.user.id} is not authorised to update course`,
