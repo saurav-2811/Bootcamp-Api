@@ -1,4 +1,4 @@
-# Myfirstbackendapi Backend API Specifications
+# Myfirst Backend API Specifications
 
 Created the backend for a bootcamp directory website. 
 
